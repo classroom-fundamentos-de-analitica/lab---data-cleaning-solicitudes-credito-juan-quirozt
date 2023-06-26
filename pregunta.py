@@ -26,7 +26,7 @@ def clean_data():
 
     df.fecha_de_beneficio = pd.to_datetime(df.fecha_de_beneficio, infer_datetime_format=True, errors='ignore', dayfirst=True)
     df.drop_duplicates(inplace=True)
-    df.fecha_de_beneficio = df.fecha_de_beneficio.dt.strftime("%Y/%m/%d")
+    df.fecha_de_beneficio = df.fecha_de_beneficio.at.strftime("%Y/%m/%d")
 
 
     #df.fecha_de_beneficio = pd.to_datetime(df.fecha_de_beneficio, infer_datetime_format = True, errors = 'ignore', dayfirst = True)
