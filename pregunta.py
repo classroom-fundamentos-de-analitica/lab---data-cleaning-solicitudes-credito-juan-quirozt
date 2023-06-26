@@ -6,26 +6,40 @@ Realice la limpieza del dataframe. Los tests evaluan si la limpieza fue realizad
 correctamente. Tenga en cuenta datos faltantes y duplicados.
 
 """
-import re
 import pandas as pd
-from datetime import datetime
+
 def clean_data():
-    df = pd.read_csv("solicitudes_credito.csv", sep=";", index_col=0)
-    df = df.dropna(axis=0)
-    df = df.drop_duplicates()
+    df = pd.read_csv("solicitudes_credito.csv", sep=";",index_col=0)
+    df.dropna(axis=0,inplace=True)
+    df.drop_duplicates(inplace=True)
+
+    for columna in ['sexo', 'tipo_de_emprendimiento', 'idea_negocio', 'barrio', 'línea_credito']:
+        df[columna] = df[columna].str.lower()
+        df[columna] = df[columna].apply(lambda i: i.replace('-',' '))
+        df[columna] = df[columna].apply(lambda i: i.replace('_',' '))
     
-    df = df.applymap(lambda x: re.sub(r'[-_]'," ",str(x).lower()))
-    df['monto_del_credito'] = df['monto_del_credito'].str.replace("\.00", "").replace({ r"[\D]" : '' },regex= True).astype(int)
-    df['comuna_ciudadano'] = df['comuna_ciudadano'].astype(float)
+    df.comuna_ciudadano = df.comuna_ciudadano.astype(float)
     
-    def dateparse(date):
-        kek = date.split("/")
-        if len(kek[0]) == 4:
-            return datetime(int(kek[0]),int(kek[1]),int(kek[2]))
+    def modificarFecha(fecha):
+        c = fecha.split('/')
+        if len(c[0]) == 4:
+            nueva_fecha = '/'.join(reversed(c))
         else:
-            return datetime(int(kek[2]),int(kek[1]),int(kek[0]))
+            nueva_fecha = fecha
+        return nueva_fecha
     
-    df['fecha_de_beneficio'] = df['fecha_de_beneficio'].apply(dateparse)
+    df.fecha_de_beneficio = df.fecha_de_beneficio.apply(correccion)
     
-    df.drop_duplicates(inplace = True)
+    df.monto_del_credito = df.monto_del_credito.str.strip('$')
+    df.monto_del_credito = df.monto_del_credito.str.replace(',','')
+    df.monto_del_credito = df.monto_del_credito.str.replace(' ','')
+    df.monto_del_credito = df.monto_del_credito.astype(float)
+    df.monto_del_credito = df.monto_del_credito.astype(int)
+    
+    df.dropna(axis=0,inplace=True)
+    df.drop_duplicates(subset=["sexo","tipo_de_emprendimiento","idea_negocio",
+                                    "barrio", "estrato", "comuna_ciudadano",
+                                    "fecha_de_beneficio", "monto_del_credito",
+                                    "línea_credito"],
+                                    inplace=True)
     return df
