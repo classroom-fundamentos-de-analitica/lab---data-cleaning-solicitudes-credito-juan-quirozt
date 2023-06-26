@@ -9,15 +9,11 @@ correctamente. Tenga en cuenta datos faltantes y duplicados.
 import re
 import pandas as pd
 from datetime import datetime
-
 def clean_data():
-
-    df = pd.read_csv("solicitudes_credito.csv", sep=";")
-
-    df.dropna(axis = 0, inplace = True)
-    df.drop_duplicates(inplace = True)
-    #df = df.drop('Unnamed: 0', axis = 1)
-
+    df = pd.read_csv("solicitudes_credito.csv", sep=";", index_col=0)
+    df = df.dropna(axis=0)
+    df = df.drop_duplicates()
+    
     df = df.applymap(lambda x: re.sub(r'[-_]'," ",str(x).lower()))
     df['monto_del_credito'] = df['monto_del_credito'].str.replace("\.00", "").replace({ r"[\D]" : '' },regex= True).astype(int)
     df['comuna_ciudadano'] = df['comuna_ciudadano'].astype(float)
