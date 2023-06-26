@@ -8,7 +8,7 @@ correctamente. Tenga en cuenta datos faltantes y duplicados.
 """
 import re
 import pandas as pd
-import datetime as dt
+from datetime import datetime
 
 def clean_data():
 
