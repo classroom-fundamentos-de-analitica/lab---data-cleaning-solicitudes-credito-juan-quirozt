@@ -28,7 +28,7 @@ def clean_data():
             nueva_fecha = fecha
         return nueva_fecha
     
-    df.fecha_de_beneficio = df.fecha_de_beneficio.apply(correccion)
+    df.fecha_de_beneficio = df.fecha_de_beneficio.apply(modificarFecha)
     
     df.monto_del_credito = df.monto_del_credito.str.strip('$')
     df.monto_del_credito = df.monto_del_credito.str.replace(',','')
