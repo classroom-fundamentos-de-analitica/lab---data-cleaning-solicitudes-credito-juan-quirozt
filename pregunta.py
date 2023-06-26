@@ -6,6 +6,7 @@ Realice la limpieza del dataframe. Los tests evaluan si la limpieza fue realizad
 correctamente. Tenga en cuenta datos faltantes y duplicados.
 
 """
+import re
 import pandas as pd
 import datetime as dt
 
